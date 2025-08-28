@@ -6,6 +6,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-      - run: |
-          echo "✅ Checking submission..."
+        with:
+          python-version: '3.9'
+      - run: pip install pandas numpy
+      - name: Check files exist
+        run: |
+          test -f solution.py || (echo "❌ Missing solution.py" && exit 1)
+          echo "✅ Files exist"
+      - name: Run solution
+        run: |
+          echo "Running solution..."
           python solution.py
