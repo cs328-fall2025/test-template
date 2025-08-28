@@ -8,12 +8,24 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - run: pip install pandas numpy
-      - name: Check files exist
+      - run: pip install pandas numpy scipy
+      
+      - name: Test on sample data
         run: |
-          test -f solution.py || (echo "❌ Missing solution.py" && exit 1)
-          echo "✅ Files exist"
-      - name: Run solution
-        run: |
-          echo "Running solution..."
+          echo "Testing step counter..."
           python solution.py
+          
+      - name: Check accuracy
+        run: |
+          python -c "
+import sys
+from solution import count_steps
+result = count_steps('data/sample_walk.csv')
+expected = 10  # Known steps in sample
+accuracy = abs(result - expected) / expected
+if accuracy <= 0.2:
+    print(f'✅ Good accuracy! Detected {result} steps (expected {expected})')
+else:
+    print(f'❌ Poor accuracy. Detected {result} steps (expected {expected})')
+    sys.exit(1)
+"
